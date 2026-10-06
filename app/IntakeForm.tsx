@@ -21,8 +21,9 @@ const EMPTY = {
 
 const FACTS_MAX = 6000;
 
-export default function IntakeForm({ matterTypes }: { matterTypes: string[] }) {
+export default function IntakeForm({ matterTypes, needsPasscode }: { matterTypes: string[]; needsPasscode: boolean }) {
   const [values, setValues] = useState(EMPTY);
+  const [passcode, setPasscode] = useState("");
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<Status>({ kind: "idle" });
@@ -38,7 +39,7 @@ export default function IntakeForm({ matterTypes }: { matterTypes: string[] }) {
       const res = await fetch("/api/intake", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...values, consent }),
+        body: JSON.stringify({ ...values, consent, passcode }),
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.ok) {
@@ -210,6 +211,22 @@ export default function IntakeForm({ matterTypes }: { matterTypes: string[] }) {
             </span>
           </label>
           {err("consent")}
+
+          {needsPasscode && (
+            <label className="field passcode">
+              <span className="field__label">Demo passcode <em>*</em></span>
+              <span className="field__hint">This is a test site. Use the passcode you were given.</span>
+              <input
+                type="password"
+                value={passcode}
+                onChange={(e) => setPasscode(e.target.value)}
+                autoComplete="off"
+                required
+                {...field("passcode")}
+              />
+              {err("passcode")}
+            </label>
+          )}
 
           {status.kind === "error" && (
             <p className="form__alert" role="alert">

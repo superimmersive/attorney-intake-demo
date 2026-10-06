@@ -100,7 +100,7 @@ export default function Home() {
           </details>
         </section>
 
-        <IntakeForm matterTypes={[...MATTER_TYPES]} />
+        <IntakeForm matterTypes={[...MATTER_TYPES]} needsPasscode={!!process.env.DEMO_PASSCODE?.trim()} />
       </main>
 
       <footer className="wrap footer">

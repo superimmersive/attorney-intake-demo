@@ -471,6 +471,11 @@ textarea:focus {
   accent-color: var(--accent);
 }
 
+.passcode {
+  max-width: 280px;
+  margin: 20px 0 0;
+}
+
 .form__alert {
   margin: 16px 0 0;
   padding: 11px 14px;

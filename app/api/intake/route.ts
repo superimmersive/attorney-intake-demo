@@ -1,3 +1,4 @@
+import { timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { makeReference, validateIntake } from "@/lib/intake";
 import { summariseIntake } from "@/lib/summarise";
@@ -34,6 +35,18 @@ export async function POST(req: Request) {
   // Honeypot: real visitors never see or fill this field.
   if (typeof body.website === "string" && body.website) {
     return NextResponse.json({ ok: true, reference: makeReference() });
+  }
+
+  const passcode = process.env.DEMO_PASSCODE?.trim();
+  if (passcode) {
+    const given = Buffer.from(typeof body.passcode === "string" ? body.passcode.trim() : "");
+    const expected = Buffer.from(passcode);
+    if (given.length !== expected.length || !timingSafeEqual(given, expected)) {
+      return NextResponse.json(
+        { ok: false, message: "That demo passcode isn't right.", errors: { passcode: "Check the passcode you were given." } },
+        { status: 401 },
+      );
+    }
   }
 
   const result = validateIntake(body);
