@@ -39,6 +39,20 @@ function overviewHtml(o: Overview): string {
     `<h1 style="font-size:20px;margin:0 0 10px;color:#1b2a3a">${esc(o.matter_title)}</h1>`,
     `<p style="margin:0 0 12px">Urgency: ${badge(o.urgency)} ${esc(o.urgency_reason)}</p>`,
     `<p style="margin:0">${esc(o.summary)}</p>`,
+    section("Next step for the firm", o.next_step ? `<p style="margin:0">${esc(o.next_step)}</p>` : ""),
+    section("Area of law to look up", bullets(o.areas_to_look_up)),
+    section(
+      "Legislation to confirm",
+      o.legislation_to_confirm.filter((i) => i.trim()).length
+        ? `${bullets(o.legislation_to_confirm)}<p style="margin:8px 0 0;font-size:12px;color:#5b6775">Names only. Confirm the text and whether it applies before relying on it.</p>`
+        : "",
+    ),
+    section(
+      "Where to check",
+      o.where_to_check.filter((i) => i.trim()).length
+        ? `${bullets(o.where_to_check)}<p style="margin:8px 0 0;font-size:12px;color:#5b6775">Suggestions only. Confirm the source and the forum before relying on them.</p>`
+        : "",
+    ),
     section(
       "Risks and flags",
       table(
@@ -101,7 +115,7 @@ ${section("Client's original submission", originalHtml(intake))}
   const text = `AI-GENERATED DRAFT FOR INTERNAL REVIEW. Not legal advice. Verify against the original submission.
 
 Intake ${reference}
-${result.overview ? `${result.overview.matter_title}\nUrgency: ${result.overview.urgency} – ${result.overview.urgency_reason}\n\n${result.overview.summary}` : result.raw}
+${result.overview ? `${result.overview.matter_title}\nUrgency: ${result.overview.urgency} – ${result.overview.urgency_reason}\n\n${result.overview.summary}${result.overview.next_step ? `\n\nNext step for the firm:\n${result.overview.next_step}` : ""}${result.overview.areas_to_look_up.filter((i) => i.trim()).length ? `\n\nArea of law to look up:\n${result.overview.areas_to_look_up.filter((i) => i.trim()).map((i) => `- ${i}`).join("\n")}` : ""}${result.overview.legislation_to_confirm.filter((i) => i.trim()).length ? `\n\nLegislation to confirm:\n${result.overview.legislation_to_confirm.filter((i) => i.trim()).map((i) => `- ${i}`).join("\n")}` : ""}${result.overview.where_to_check.filter((i) => i.trim()).length ? `\n\nWhere to check (confirm before relying on these):\n${result.overview.where_to_check.filter((i) => i.trim()).map((i) => `- ${i}`).join("\n")}` : ""}` : result.raw}
 
 --- Original submission ---
 Name: ${intake.name}

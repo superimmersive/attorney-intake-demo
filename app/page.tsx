@@ -27,20 +27,27 @@ const Icon = {
   ),
 };
 
-export default function Home() {
-  const firm = process.env.FIRM_NAME || "Demo Law Firm";
+const brand = {
+  mark: "O",
+  shortName: "Odendaal & Co.",
+  line: "Attorneys Inc",
+  name: "Odendaal & Co. Attorneys Inc",
+};
 
+export default function Home() {
   return (
     <>
       <header className="topbar">
         <div className="wrap topbar__inner">
           <span className="brand">
             <span className="brand__mark" aria-hidden="true">
-              {Icon.scale}
+              {brand.mark}
             </span>
-            {firm}
+            <span className="brand__text">
+              <span className="brand__name">{brand.shortName}</span>
+              <span className="brand__line">{brand.line}</span>
+            </span>
           </span>
-          <span className="pill">Concept demo</span>
         </div>
       </header>
 
@@ -103,14 +110,17 @@ export default function Home() {
         <IntakeForm matterTypes={[...MATTER_TYPES]} needsPasscode={!!process.env.DEMO_PASSCODE?.trim()} />
       </main>
 
-      <footer className="wrap footer">
-        <p>
-          {firm} · Demo intake form built by{" "}
-          <a href="https://superimmersive.io" target="_blank" rel="noreferrer">
-            Superimmersive
-          </a>
-          . Not a real law firm.
-        </p>
+      <footer className="footer">
+        <div className="wrap footer__inner">
+          <p className="footer__name">{brand.name}</p>
+          <p>
+            Concept demo by{" "}
+            <a href="https://superimmersive.io" target="_blank" rel="noreferrer">
+              Superimmersive
+            </a>
+            .
+          </p>
+        </div>
       </footer>
     </>
   );

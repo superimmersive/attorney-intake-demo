@@ -170,6 +170,27 @@ export function buildIntakePdf(reference: string, intake: Intake, result: Summar
     doc.moveDown(0.6);
     paragraph(doc, o.summary);
 
+    if (o.next_step) {
+      heading(doc, "Next step for the firm");
+      paragraph(doc, o.next_step);
+    }
+    if (o.areas_to_look_up.length) {
+      heading(doc, "Area of law to look up");
+      bullets(doc, o.areas_to_look_up);
+    }
+    if (o.legislation_to_confirm.length) {
+      heading(doc, "Legislation to confirm");
+      bullets(doc, o.legislation_to_confirm);
+      doc.moveDown(0.3);
+      paragraph(doc, "Names only. Confirm the text and whether it applies before relying on it.", { size: 9, color: MUTED });
+    }
+    if (o.where_to_check.length) {
+      heading(doc, "Where to check");
+      bullets(doc, o.where_to_check);
+      doc.moveDown(0.3);
+      paragraph(doc, "Suggestions only. Confirm the source and the forum before relying on them.", { size: 9, color: MUTED });
+    }
+
     heading(doc, "Risks and flags");
     if (!table(doc, ["Severity", "Issue", "Why it matters"], [0.14, 0.33, 0.53], o.risks.map((r) => [{ badge: level(r.severity) }, r.issue, r.why])))
       paragraph(doc, "None flagged.", { color: MUTED });
